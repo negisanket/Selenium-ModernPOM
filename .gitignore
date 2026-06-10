@@ -1,0 +1,26 @@
+# Build and Output
+target/
+build/
+allure-results/
+allure-report/
+.allure/
+test-output/
+
+# IDE and Project files
+.idea/
+*.iml
+*.iws
+*.ipr
+.project
+.classpath
+.settings/
+.nb-gradle/
+
+# Test Data and Artifacts
+/src/test/resources/testdata/login_data.xlsx
+screenshots/
+*.log
+
+# OS files
+Thumbs.db
+.DS_Store
