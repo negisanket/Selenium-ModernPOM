@@ -7,15 +7,15 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.epam.healenium.SelfHealingDriver;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Singleton + ThreadLocal Driver Factory to ensure thread-safe execution in concurrent pipelines.
  */
+@Slf4j
 public class DriverFactory {
 
-    private static final Logger logger = LoggerFactory.getLogger(DriverFactory.class);
     private static final ThreadLocal<WebDriver> driverThreadLocal = new ThreadLocal<>();
 
     private DriverFactory() {}
@@ -25,28 +25,26 @@ public class DriverFactory {
      * Uses W3C compliant options.
      */
     public static void initDriver(String browser) {
-        WebDriver driver;
-        logger.info("Initializing WebDriver for browser: {}", browser);
+        log.info("Initializing WebDriver for browser: {}", browser);
 
-        switch (browser.toLowerCase()) {
-            case "chrome":
-                ChromeOptions chromeOptions = new ChromeOptions();
-                chromeOptions.addArguments("--remote-allow-origins=*");
-                chromeOptions.addArguments("--no-sandbox");
-                chromeOptions.addArguments("--disable-dev-shm-usage");
-                driver = new ChromeDriver(chromeOptions);
-                break;
-            case "firefox":
-                FirefoxOptions firefoxOptions = new FirefoxOptions();
-                driver = new FirefoxDriver(firefoxOptions);
-                break;
-            case "edge":
-                EdgeOptions edgeOptions = new EdgeOptions();
-                driver = new EdgeDriver(edgeOptions);
-                break;
-            default:
-                throw new IllegalArgumentException("Unsupported browser: " + browser);
-        }
+        WebDriver delegate = switch (browser.toLowerCase()) {
+            case "chrome" -> {
+                ChromeOptions options = new ChromeOptions();
+                options.addArguments("--remote-allow-origins=*");
+                options.addArguments("--no-sandbox");
+                options.addArguments("--disable-dev-shm-usage");
+                yield new ChromeDriver(options);
+            }
+            case "firefox" -> new FirefoxDriver(new FirefoxOptions());
+            case "edge" -> new EdgeDriver(new EdgeOptions());
+            default -> throw new IllegalArgumentException("Unsupported browser: " + browser);
+        };
+
+        /* 
+        // Wrap the standard driver with Healenium's SelfHealingDriver
+        WebDriver driver = SelfHealingDriver.create(delegate);
+        */
+        WebDriver driver = delegate;
 
         driver.manage().window().maximize();
         driverThreadLocal.set(driver);
@@ -68,7 +66,7 @@ public class DriverFactory {
      */
     public static void quitDriver() {
         if (driverThreadLocal.get() != null) {
-            logger.info("Quitting WebDriver for thread: {}", Thread.currentThread().getId());
+            log.info("Quitting WebDriver for thread: {}", Thread.currentThread().getId());
             driverThreadLocal.get().quit();
             driverThreadLocal.remove();
         }

@@ -1,6 +1,7 @@
 package com.modern.automation.tests;
 
 import com.modern.automation.base.BaseTest;
+import lombok.extern.slf4j.Slf4j;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import com.modern.automation.pages.DashboardPage;
@@ -14,6 +15,7 @@ import org.testng.annotations.DataProvider;
 /**
  * Test class for Login functionality.
  */
+@Slf4j
 public class LoginTest extends BaseTest {
 
     private static int flakyCounter = 0;
@@ -21,13 +23,13 @@ public class LoginTest extends BaseTest {
 
     @BeforeClass
     public void prepareTestData() {
-        logger.info("Preparing Excel test data...");
+        log.info("Preparing Excel test data...");
         TestDataGenerator.generateLoginData(excelPath);
     }
 
     @DataProvider(name = "loginData")
     public Object[][] getLoginData() {
-        logger.info("Reading test data from Excel: {}", excelPath);
+        log.info("Reading test data from Excel: {}", excelPath);
         return ExcelUtils.getTestData(excelPath, "Sheet1");
     }
 
@@ -46,7 +48,7 @@ public class LoginTest extends BaseTest {
     @Test(description = "Verify RetryAnalyzer with a flaky test", retryAnalyzer = RetryAnalyzer.class)
     public void testFlakyLogin() {
         flakyCounter++;
-        logger.info("Flaky test execution count: {}", flakyCounter);
+        log.info("Flaky test execution count: {}", flakyCounter);
 
         if (flakyCounter == 1) {
             Assert.fail("Simulated first-time failure for RetryAnalyzer validation.");

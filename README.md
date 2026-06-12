@@ -28,24 +28,31 @@ An enterprise-grade, high-concurrency hybrid automation framework designed for m
 - `ExcelUtils` parses sheets into a 2D object array for TestNG `@DataProvider`.
 - Includes `TestDataGenerator` to programmatically create dummy data files.
 
-### 6. Resilience & Retry Mechanism
+### 6. Self-Healing Locators (Healenium)
+- Integrated **Healenium** to automatically recover from broken or changed locators.
+- Wraps the standard `WebDriver` in a `SelfHealingDriver` within the `DriverFactory`.
+- Eliminates test fragility caused by minor UI changes without requiring code updates.
+- **Report:** Generates AI-driven healing suggestions available at `http://localhost:7878/healenium/report`.
+
+### 7. Resilience & Retry Mechanism
 - Implements `IRetryAnalyzer` to automatically re-run flaky tests.
 - Configurable max retry count to ensure stability in CI/CD pipelines.
 
-### 7. Observability & Utilities
+### 8. Observability & Utilities
+- **Cleanup Strategy:** Automatically archives artifacts from the last 3 runs in `test-archives/`.
+- **Lombok @Slf4j:** Centralized, boilerplate-free logging across all framework layers.
 - **Screenshot Utilities:** `ScreenshotUtils` captures browser state during execution.
-- **Date & Time Utilities:** `DateUtils` provides formatted timestamps for logs and filenames.
 - **Automated Failure Capture:** `TestListener` (TestNG `ITestListener`) automatically captures and saves a screenshot to `build/screenshots/` whenever a test fails.
-- **Allure Reporting:** Integrated Allure for rich, interactive test reports. Screenshots of failed tests are automatically embedded directly into the report.
+- **Allure Reporting:** Integrated Allure for rich, interactive test reports.
 
 ## Project Structure
 ```text
 src/
 ├── main/java/com/modern/automation/
 │   ├── api/             # RestAssured API clients
-│   ├── driver/          # ThreadLocal WebDriver management
+│   ├── driver/          # ThreadLocal WebDriver + Healenium management
 │   ├── pages/           # Fluent Page Objects (By locators)
-│   └── utils/           # Stateless Element, Excel, Screenshot, Date utils & Listeners
+│   └── utils/           # Stateless Element, Cleanup, Screenshot, Date utils & Listeners
 └── test/java/com/modern/automation/
     ├── base/            # BaseTest for setup/teardown & Hybrid Bridge
     └── tests/           # TestNG test suites
@@ -56,9 +63,15 @@ src/
 ### Prerequisites
 - JDK 17+
 - Maven 3.8+
+- Docker (for Healenium Backend)
 - Browsers installed (Chrome/Firefox)
 
-### Execute via Maven
+### 1. Start Healenium Backend
+```bash
+docker-compose -f healenium-docker-compose.yaml up -d
+```
+
+### 2. Execute via Maven
 ```bash
 # Run all tests
 mvn clean test
@@ -67,15 +80,14 @@ mvn clean test
 mvn clean test -DsuiteXmlFile=src/test/resources/testng-smoke.xml
 ```
 
-### Generate Allure Report
-After running the tests, use the following commands to generate and view the report:
+### 3. Generate Allure Report
 ```bash
-# Generate report
-mvn allure:report
-
-# Open report in browser
+# Generate and open report
 mvn allure:serve
 ```
+
+### View Healing Results
+Visit [http://localhost:7878/healenium/report](http://localhost:7878/healenium/report) after your test run to see AI-healed locators.
 
 ### Execute via TestNG XML
 Right-click `src/test/resources/testng.xml` (Full Suite) or `src/test/resources/testng-smoke.xml` (Smoke Suite) and select **Run**.

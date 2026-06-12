@@ -2,33 +2,31 @@ package com.modern.automation.utils;
 
 import com.modern.automation.driver.DriverFactory;
 import io.qameta.allure.Attachment;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * TestNG Listener for automated actions during test lifecycle.
  * Handles screenshot capture on test failure and attaches them to Allure reports.
  */
+@Slf4j
 public class TestListener implements ITestListener {
-
-    private static final Logger logger = LoggerFactory.getLogger(TestListener.class);
 
     @Override
     public void onTestFailure(ITestResult result) {
-        logger.error("Test Failed: {}. Capturing screenshot...", result.getName());
+        log.error("Test Failed: {}. Capturing screenshot...", result.getName());
         try {
             // Local file capture
             String path = ScreenshotUtils.captureScreenshot(result.getName());
-            logger.info("Failure screenshot captured locally at: {}", path);
+            log.info("Failure screenshot captured locally at: {}", path);
             
             // Allure Attachment
             saveScreenshot(result.getName());
         } catch (Exception e) {
-            logger.error("Failed to capture screenshot on test failure.", e);
+            log.error("Failed to capture screenshot on test failure.", e);
         }
     }
 
@@ -39,11 +37,11 @@ public class TestListener implements ITestListener {
 
     @Override
     public void onTestStart(ITestResult result) {
-        logger.info("Starting Test: {}", result.getName());
+        log.info("Starting Test: {}", result.getName());
     }
 
     @Override
     public void onTestSuccess(ITestResult result) {
-        logger.info("Test Passed: {}", result.getName());
+        log.info("Test Passed: {}", result.getName());
     }
 }

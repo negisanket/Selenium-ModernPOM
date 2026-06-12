@@ -1,11 +1,10 @@
 package com.modern.automation.utils;
 
 import com.modern.automation.driver.DriverFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,9 +12,8 @@ import java.io.IOException;
 /**
  * Utility for capturing screenshots.
  */
+@Slf4j
 public class ScreenshotUtils {
-
-    private static final Logger logger = LoggerFactory.getLogger(ScreenshotUtils.class);
     private static final String SCREENSHOT_PATH = "build/screenshots/";
 
     /**
@@ -32,9 +30,9 @@ public class ScreenshotUtils {
 
         try {
             FileUtils.copyFile(srcFile, destFile);
-            logger.info("Screenshot saved successfully at: {}", destinationPath);
+            log.info("Screenshot saved successfully at: {}", destinationPath);
         } catch (IOException e) {
-            logger.error("Failed to capture screenshot: {}", destinationPath, e);
+            log.error("Failed to capture screenshot: {}", destinationPath, e);
         }
 
         return destinationPath;

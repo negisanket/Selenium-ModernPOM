@@ -6,10 +6,11 @@ import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.modern.automation.utils.CleanupUtils;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 
@@ -17,13 +18,18 @@ import java.util.Map;
  * BaseTest class for setup and teardown.
  * Includes Hybrid API-UI bridge logic.
  */
+@Slf4j
 public abstract class BaseTest {
 
-    protected static final Logger logger = LoggerFactory.getLogger(BaseTest.class);
-    
     protected String baseUrl = getEnvOrDefault("BASE_UI_URL", "https://opensource-demo.orangehrmlive.com/");
     protected String baseApiUrl = getEnvOrDefault("BASE_API_URL", "https://opensource-demo.orangehrmlive.com/");
     protected String defaultBrowser = getEnvOrDefault("BROWSER", "chrome");
+
+    @BeforeSuite
+    public void suiteSetup() {
+        log.info("Initializing test suite. Performing cleanup of old artifacts...");
+        CleanupUtils.performCleanup();
+    }
 
     @BeforeMethod
     @Parameters("browser")
@@ -42,7 +48,7 @@ public abstract class BaseTest {
      * Hybrid Bridge: Authenticate via API and seed cookies into the browser.
      */
     protected void loginViaApi(String username, String password) {
-        logger.info("Performing hybrid API login for user: {}", username);
+        log.info("Performing hybrid API login for user: {}", username);
         ApiClient apiClient = new ApiClient(baseApiUrl);
         Map<String, String> cookies = apiClient.getSessionCookies(username, password);
 
@@ -57,7 +63,7 @@ public abstract class BaseTest {
 
         // Refresh to apply cookies and enter authenticated state
         driver.navigate().refresh();
-        logger.info("Hybrid login completed. Cookies seeded and page refreshed.");
+        log.info("Hybrid login completed. Cookies seeded and page refreshed.");
     }
 
     private String getEnvOrDefault(String key, String defaultValue) {
