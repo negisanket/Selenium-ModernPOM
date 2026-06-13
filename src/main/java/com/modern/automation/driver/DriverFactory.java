@@ -7,7 +7,6 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import com.epam.healenium.SelfHealingDriver;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -18,7 +17,7 @@ public class DriverFactory {
 
     private static final ThreadLocal<WebDriver> driverThreadLocal = new ThreadLocal<>();
 
-    private DriverFactory() {}
+    private DriverFactory() { }
 
     /**
      * Initializes the driver based on the provided browser name.

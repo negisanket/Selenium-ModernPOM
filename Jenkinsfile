@@ -18,6 +18,19 @@ pipeline {
         stage('Initialize') {
             steps {
                 echo "🚀 Initializing Pipeline for ${params.ENVIRONMENT} on ${params.BROWSER}..."
+            }
+        }
+
+        stage('Static Code Analysis') {
+            steps {
+                echo "🔍 Running Checkstyle Audit..."
+                bat 'mvn checkstyle:check'
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                echo "🧹 Cleaning up project..."
                 bat 'mvn clean'
             }
         }

@@ -1,11 +1,8 @@
 package com.modern.automation.utils;
 
 import com.modern.automation.driver.DriverFactory;
-import com.modern.automation.pages.LoginPage;
-import com.modern.automation.pages.DashboardPage;
 import org.openqa.selenium.By;
 import lombok.extern.slf4j.Slf4j;
-
 import java.lang.reflect.Field;
 
 /**
@@ -54,7 +51,9 @@ public class McpActionRunner {
     }
 
     private static By resolveLocator(String target) throws Exception {
-        if (!target.contains(".")) return null;
+        if (!target.contains(".")) {
+            return null;
+        }
 
         String[] parts = target.split("\\.");
         String className = parts[0];

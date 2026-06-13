@@ -1,9 +1,12 @@
 package com.modern.automation.utils;
 
-import org.apache.poi.ss.usermodel.*;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -14,9 +17,8 @@ import java.nio.file.Paths;
 /**
  * Enhanced Utility to read and write Excel files.
  */
+@Slf4j
 public class ExcelUtils {
-
-    private static final Logger logger = LoggerFactory.getLogger(ExcelUtils.class);
 
     /**
      * Reads data from an Excel sheet and returns it as a 2D Object array.
@@ -28,7 +30,7 @@ public class ExcelUtils {
 
             Sheet sheet = workbook.getSheet(sheetName);
             if (sheet == null) {
-                logger.error("Sheet '{}' not found in file: {}", sheetName, filePath);
+                log.error("Sheet '{}' not found in file: {}", sheetName, filePath);
                 return new Object[0][0];
             }
 
@@ -45,7 +47,7 @@ public class ExcelUtils {
                 }
             }
         } catch (IOException e) {
-            logger.error("Error reading Excel file: {}", filePath, e);
+            log.error("Error reading Excel file: {}", filePath, e);
         }
         return data;
     }
@@ -55,12 +57,12 @@ public class ExcelUtils {
      * Automatically creates the file and parent directories if they don't exist.
      */
     public static void writeToExcel(String filePath, String sheetName, String[][] data) {
-        logger.info("Writing data to Excel file: {}", filePath);
+        log.info("Writing data to Excel file: {}", filePath);
         
         try {
             Files.createDirectories(Paths.get(filePath).getParent());
         } catch (IOException e) {
-            logger.error("Failed to create directories for: {}", filePath, e);
+            log.error("Failed to create directories for: {}", filePath, e);
         }
 
         try (Workbook workbook = new XSSFWorkbook()) {
@@ -76,10 +78,10 @@ public class ExcelUtils {
 
             try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
                 workbook.write(fileOut);
-                logger.info("Successfully wrote Excel file to: {}", filePath);
+                log.info("Successfully wrote Excel file to: {}", filePath);
             }
         } catch (IOException e) {
-            logger.error("Error writing Excel file: {}", filePath, e);
+            log.error("Error writing Excel file: {}", filePath, e);
         }
     }
 

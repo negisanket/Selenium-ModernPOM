@@ -112,3 +112,9 @@ The framework includes a production-ready **Jenkinsfile** (Declarative Pipeline)
 - **Fail-Safe Reporting:** Integrated Allure reporting and JUnit backup. The pipeline is designed to capture results even if individual test stages fail.
 - **Windows Optimized:** Configured to run seamlessly on Windows-based Jenkins nodes using Batch commands.
 - **Artifact Management:** Automatically archives failure screenshots for rapid debugging.
+
+## 🛡️ Code Quality (Checkstyle)
+The framework enforces production-level Java coding standards using **Checkstyle**.
+- **Configuration:** Custom rules based on Google Java Style (see `config/checkstyle/checkstyle.xml`).
+- **Enforcement:** The pipeline includes a `Static Code Analysis` stage that fails the build if style violations (unused imports, naming conventions, etc.) are detected.
+- **Manual Check:** Run `mvn checkstyle:check` locally before pushing code.

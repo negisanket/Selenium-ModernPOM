@@ -63,10 +63,14 @@ public class CleanupUtils {
 
     private static void purgeOldArchives() {
         File archiveRoot = new File(ARCHIVE_PATH);
-        if (!archiveRoot.exists()) return;
+        if (!archiveRoot.exists()) {
+            return;
+        }
 
         File[] runs = archiveRoot.listFiles(File::isDirectory);
-        if (runs == null || runs.length <= MAX_RUNS_TO_KEEP) return;
+        if (runs == null || runs.length <= MAX_RUNS_TO_KEEP) {
+            return;
+        }
 
         // Sort by name (which includes timestamp yyyyMMdd_HHmmss)
         Arrays.sort(runs, Comparator.comparing(File::getName));

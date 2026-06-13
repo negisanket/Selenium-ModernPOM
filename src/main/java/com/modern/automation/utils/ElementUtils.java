@@ -3,7 +3,6 @@ package com.modern.automation.utils;
 import com.modern.automation.driver.DriverFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -19,7 +18,7 @@ public class ElementUtils {
 
     private static final int DEFAULT_TIMEOUT = 15;
 
-    private ElementUtils() {}
+    private ElementUtils() { }
 
     private static WebDriverWait getWait() {
         return new WebDriverWait(DriverFactory.getDriver(), Duration.ofSeconds(DEFAULT_TIMEOUT));
