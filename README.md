@@ -99,3 +99,9 @@ Right-click `src/test/resources/testng.xml` (Full Suite) or `src/test/resources/
 - **Excel Integration:** `testLoginWithDataProvider` reads credentials directly from `login_data.xlsx`.
 - **Hybrid Auth:** `testHybridLogin` demonstrates seeding cookies via API.
 - **Visual Analytics:** Allure reports provide a detailed breakdown of test results with embedded failure screenshots.
+
+## 🤖 AI-Agentic Readiness (MCP)
+This framework is fully integrated with the **Model Context Protocol (MCP)**, allowing it to interface with AI Agents (like Claude or Gemini).
+- **Autonomous Testing:** The AI can execute tests, analyze screenshots, and self-heal locators using the included `mcp-bridge`.
+- **Framework-Aware Tools:** Exposes `DriverFactory` and `ElementUtils` capabilities directly to AI agents.
+- **Detailed Guide:** See [MCPIntegration.md](./MCPIntegration.md) for the full architectural roadmap.
