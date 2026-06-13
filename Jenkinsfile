@@ -7,27 +7,29 @@ pipeline {
     }
 
     environment {
-        MAVEN_HOME = tool 'Maven' // Ensure Maven is configured in Jenkins Global Tool Configuration
-        PATH = "${env.MAVEN_HOME}/bin:${env.PATH}"
+        // Ensure Maven is configured in Jenkins Global Tool Configuration with the name 'Maven'
+        MAVEN_HOME = tool 'Maven'
+        // For Windows, the path separator is semicolon and bin is in the MAVEN_HOME
+        PATH = "${env.MAVEN_HOME}\\bin;${env.PATH}"
     }
 
     stages {
         stage('Setup & Cleanup') {
             steps {
                 echo "Initializing Pipeline for ${params.ENVIRONMENT} on ${params.BROWSER}..."
-                sh 'mvn clean'
+                bat 'mvn clean'
             }
         }
 
         stage('Smoke Tests') {
             steps {
                 echo "Running Smoke Test Suite..."
-                // We use -Dbrowser to override the XML value if needed, or rely on framework default
-                sh "mvn test -DsuiteXmlFile=src/test/resources/testng-smoke.xml -Dbrowser=${params.BROWSER}"
+                bat "mvn test -DsuiteXmlFile=src/test/resources/testng-smoke.xml -Dbrowser=${params.BROWSER}"
             }
             post {
                 always {
-                    allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
+                    // Explicitly using 'Allure 2.27' to resolve ambiguity
+                    allure includeProperties: false, jdk: '', results: [[path: 'allure-results']], commandline: 'Allure 2.27'
                 }
             }
         }
@@ -38,9 +40,7 @@ pipeline {
             }
             steps {
                 echo "Running Full Regression Suite..."
-                // Exclude smokeTest group if you want "Regression other than smoke"
-                // Or just run the full testng.xml
-                sh "mvn test -DsuiteXmlFile=src/test/resources/testng.xml -Dbrowser=${params.BROWSER}"
+                bat "mvn test -DsuiteXmlFile=src/test/resources/testng.xml -Dbrowser=${params.BROWSER}"
             }
         }
     }
@@ -48,7 +48,7 @@ pipeline {
     post {
         always {
             echo "Generating Final Allure Report..."
-            allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
+            allure includeProperties: false, jdk: '', results: [[path: 'allure-results']], commandline: 'Allure 2.27'
             
             echo "Archiving failure artifacts..."
             archiveArtifacts artifacts: 'build/screenshots/*.png', allowEmptyArchive: true
