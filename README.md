@@ -105,3 +105,10 @@ This framework is fully integrated with the **Model Context Protocol (MCP)**, al
 - **Autonomous Testing:** The AI can execute tests, analyze screenshots, and self-heal locators using the included `mcp-bridge`.
 - **Framework-Aware Tools:** Exposes `DriverFactory` and `ElementUtils` capabilities directly to AI agents.
 - **Detailed Guide:** See [MCPIntegration.md](./MCPIntegration.md) for the full architectural roadmap.
+
+## 🚀 CI/CD Integration (Jenkins)
+The framework includes a production-ready **Jenkinsfile** (Declarative Pipeline) for continuous integration.
+- **Parameterized Execution:** Select `BROWSER`, `ENVIRONMENT`, and specific test suites (`RUN_SMOKE`, `RUN_REGRESSION`) at runtime.
+- **Fail-Safe Reporting:** Integrated Allure reporting and JUnit backup. The pipeline is designed to capture results even if individual test stages fail.
+- **Windows Optimized:** Configured to run seamlessly on Windows-based Jenkins nodes using Batch commands.
+- **Artifact Management:** Automatically archives failure screenshots for rapid debugging.
